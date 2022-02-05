@@ -54,6 +54,9 @@ class Render:
         self.ax = fig.gca(projection='3d')
         self.ax.voxels(x, y, z, blocks, facecolors=facecolors, edgecolor='k', linewidth=0)
         self.ax.view_init(azim=225)
+        self.ax.set_xlabel("x")
+        self.ax.set_ylabel("z")
+        self.ax.set_zlabel("y")
         fig.canvas.mpl_connect("key_press_event", self.move_view)
 
         plt.show()
