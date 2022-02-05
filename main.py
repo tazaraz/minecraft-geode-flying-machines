@@ -1,5 +1,6 @@
 import numpy as np
 from draw import Render
+from flyingMachines import FlyingMachine
 from voxel import Block, BlockId, VoxelMap
 
 def liking_scale(value):
@@ -19,9 +20,13 @@ if __name__ == "__main__":
     v.add_block(Block(13, 13, 12, BlockId.amethyst))
     v.add_block(Block(14, 14, 16, BlockId.amethyst))
     v.add_block(Block(15, 17, 16, BlockId.amethyst))
-    print(v.flatten_side("x"))
+    fm = FlyingMachine(v, 2, 2, 2)
 
-    scores = np.zeros((size, size, size), dtype=np.int64)
+    side = v.flatten_side("x", show_hidden=True)
+
+    print(side)
+
+    # scores = np.zeros((size, size, size), dtype=np.int64)
     # for x in range(size):
     #     for y in range(size):
     #         for z in range(size):
@@ -35,4 +40,4 @@ if __name__ == "__main__":
     #             if v.voxels[x][y][z] == BlockId.air:
     #                 v.voxels[x][y][z] = liking_scale(closest)
 
-    Render(v.size, v.voxels, v.block_config)
+    v.render()
