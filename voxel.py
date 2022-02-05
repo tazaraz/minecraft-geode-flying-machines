@@ -11,6 +11,8 @@ class BlockId:
     # These values map directly to VoxelMap.block_config,
     # so a value of -1 translates to block_config[-1]
     # How much the algorithm likes this spot
+    observer = -7
+    piston = -6
     slime = -5
     honey = -4
     slightly = -3
@@ -44,7 +46,10 @@ class VoxelMap:
         {'color': [0, 0, 0, 0]},
         {'color': [0.58, 0, 0.83, 0.3]},
         {'color': [0.29, 0, 0.51, 1]},
-        {'color': 'lime'},
+
+        {'color': [0.3, 0.3, 0.3, 1]},
+        {'color': [0.64, 0.45, 0.29, 1]},
+        {'color': [0, 1, 0, 0.3]},
         {'color': 'yellow'},
         {'color': [1, 1, 0, 0.03]},
         {'color': [1, 0.5, 0, 0.07]},
@@ -92,33 +97,35 @@ class VoxelMap:
                 self.add_block(Block(block.x, block.y, block.z - 1, BlockId.amethyst_cluster))
                 self.add_block(Block(block.x, block.y, block.z + 1, BlockId.amethyst_cluster))
 
-    def flatten_side(self, axis="x") -> np.ndarray:
+    def flatten_side(self, axis="x", show_hidden=False) -> np.ndarray:
         side = np.zeros((self.size, self.size), dtype=np.int64)
 
         # Config for how to extract the correct data
         if axis == "x":
-            i1, i2 = "x", "z"
-        elif axis == "y":
-            i1, i2 = "y", "z"
+            i1, i2, = "x", "z"
+        elif axis == "z":
+            i1, i2 = "z", "y"
         else:
-            i1, i2, = "x", "y"
+            i1, i2 = "x", "y"
 
         for block in self.blocks:
             b = side[getattr(block, i1)][getattr(block, i2)]
 
             # Here becomes apparent why the BlockId of honey and slime are less than air:
             # We don't want it rendered in the flattening
-            if b < block.id:
+            if b < block.id or (show_hidden and b == BlockId.air):
                 side[getattr(block, i1)][getattr(block, i2)] = block.id
 
         return np.rot90(np.fliplr(side))
 
+    def render(self):
+        Render(self.size, self.voxels, self.block_config)
 
     @staticmethod
     def distance_2d(block1: Block, block2: Block, axis="x") -> int:
         if axis == "x":
             return np.abs(block1.x - block2.x) + np.abs(block1.z - block2.z)
-        elif axis == "y":
+        elif axis == "z":
             return np.abs(block1.y - block2.y) + np.abs(block1.z - block2.z)
         else:
             return np.abs(block1.x - block2.x) + np.abs(block1.y - block2.y)
