@@ -83,9 +83,9 @@ class VoxelMap:
         # Append if not already filled up
         # Allow overwriting air blocks and amethyst clusters
         if 0 <= block.x < self.size and 0 <= block.y < self.size and 0 <= block.z < self.size and \
-               (self.voxels[block.x][block.y][block.z] == BlockId.air or \
-                self.voxels[block.x][block.y][block.z] == BlockId.amethyst_cluster):
-            self.voxels[block.x][block.y][block.z] = block.id
+               (self.voxels[block.x][block.z][block.y] == BlockId.air or \
+                self.voxels[block.x][block.z][block.y] == BlockId.amethyst_cluster):
+            self.voxels[block.x][block.z][block.y] = block.id
             self.blocks.append(Block(block.x, block.y, block.z, block.id))
 
             # Add surrounding blocks which would contain clusters

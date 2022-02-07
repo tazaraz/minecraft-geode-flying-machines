@@ -26,8 +26,8 @@ class Render:
         for x in range(size):
             for y in range(size):
                 for z in range(size):
-                    blocktype = voxels[x][y][z]
-                    colors[x][y][z] = block_config[blocktype]['color']
+                    blocktype = voxels[x][z][y]
+                    colors[x][z][y] = block_config[blocktype]['color']
 
         # Weird magic borrowed from
         # https://matplotlib.org/devdocs/gallery/mplot3d/voxels_numpy_logo.html
